@@ -1,6 +1,6 @@
 # Sonic Pi for Emacs π=-
 
-A Emacs plugin to enable live coding music in Ruby communicate with SonicPi.
+A Emacs plugin to enable live coding music in Ruby communicating with SonicPi.
 
 #### Prerequisites
 
