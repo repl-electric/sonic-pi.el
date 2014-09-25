@@ -6,3 +6,12 @@ A Emacs plugin to enable live coding music in Ruby communicating with SonicPi.
 
 * A checkout of sonic-pi https://github.com/samaaron/sonic-pi
 * Ruby 1.9.3+
+
+
+#### Usage
+
+
+```lisp
+(require 'sonic-pi)
+(setvar sonic-pi-path "SONIC-PI-INSTALL-DIR")
+```
