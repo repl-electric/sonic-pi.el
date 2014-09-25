@@ -1,8 +1,8 @@
-# Sonic Emacs Pi
-
+# Sonic Pi for Emacs π=-
 
 A Emacs plugin to enable live coding music in Ruby communicate with SonicPi.
 
-Requires
-* A checkout of sonic-pi
-* A ruby install thats capable of running the sonic-pi server
+#### Prerequisites
+
+* A checkout of sonic-pi https://github.com/samaaron/sonic-pi
+* Ruby 1.9.3+
