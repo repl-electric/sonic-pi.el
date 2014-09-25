@@ -1,5 +1,5 @@
 (source gnu)
 (source melpa)
 
-(package-file "sonic-emacs-pi.el")
+(package-file "sonic-pi.el")
 (files "*.el" (:exclude ".dir-locals.el"))
