@@ -13,5 +13,5 @@ A Emacs plugin to enable live coding music in Ruby communicating with SonicPi.
 
 ```lisp
 (require 'sonic-pi)
-(setvar sonic-pi-path "SONIC-PI-INSTALL-DIR")
+(setq sonic-pi-path "SONIC-PI-INSTALL-DIR")
 ```
