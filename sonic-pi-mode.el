@@ -11,7 +11,11 @@
 
 (defun sonic-pi-stop-all        () (interactive) (sonic-pi-osc-send-command "stop-all-jobs"))
 (defun sonic-pi-start-recording () (interactive) (sonic-pi-osc-send-command "start-recording"))
-(defun sonic-pi-stop-recording  () (interactive) (sonic-pi-osc-send-command "stop-recording"))
+(defun sonic-pi-stop-recording  (filename) (interactive "FSave to:")
+  (sonic-pi-osc-send-command "stop-recording")
+  (sonic-pi-osc-send-command-with-arg "save-recording" filename))
+
+;;sonic-pi-osc-send-command-with-arg
 
 (defvar sonic-pi-mode-map
   (let ((map (make-sparse-keymap)))
