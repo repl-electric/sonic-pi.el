@@ -17,9 +17,10 @@
 ")
 
 (defun sonic-pi-messages-buffer-init ()
-  (let ((origin (current-buffer)))
+  (let ((origin (current-buffer))
+        (already-exists (get-buffer sonic-pi-message-buffer-name)))
     (select-window (display-buffer (sonic-pi-messages-buffer)))
-    (insert sonic-pi-message-buffer-intro)
+    (if (not already-exists) (insert sonic-pi-message-buffer-intro))
     (select-window (display-buffer origin))))
 
 (defun sonic-pi-messages-buffer-cleanup ()
