@@ -1,5 +1,7 @@
 ;;; sonic-pi-console.el --- Object inspector -*- lexical-binding: t -*-
 
+(require 'ansi-color)
+
 (defconst sonic-pi-message-buffer-name "*sonic-pi-messages*")
 (defcustom sonic-pi-log-messages t
   "If non-nil, log protocol messages to the `sonic-pi-message-buffer-name' buffer."
@@ -8,6 +10,23 @@
 
 (defconst sonic-pi-message-buffer-max-size 1000000)
 (defconst sonic-pi-message-buffer-reduce-denominator 4)
+
+(defconst sonic-pi-message-buffer-intro
+  "Welcome to SonicPi http://sonic-pi.net, Audible computing.
+ \\:O/     π=-      π=-
+   █       π=-   π   π=-   π=-
+ .||.     π=-  π=-  π=-
+
+")
+
+(defun sonic-pi-messages-buffer-init ()
+  (let ((origin (current-buffer)))
+    (select-window (display-buffer (sonic-pi-messages-buffer)))
+    (insert sonic-pi-message-buffer-intro)
+    (select-window (display-buffer origin))))
+
+(defun sonic-pi-messages-buffer-cleanup ()
+  (kill-buffer (sonic-pi-messages-buffer)))
 
 (defun sonic-pi-messages-buffer ()
   "Return or create the buffer given by `sonic-pi-message-buffer-name'.

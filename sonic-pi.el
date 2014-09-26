@@ -73,7 +73,8 @@
 (defun sonic-pi-connect (&optional prompt-project)
   "Connect to SonicPi Server"
   (interactive)
-  (sonic-pi-osc-connect))
+  (sonic-pi-osc-connect)
+  (sonic-pi-messages-buffer-init))
 
 ;;;###autoload
 (eval-after-load 'ruby-mode
