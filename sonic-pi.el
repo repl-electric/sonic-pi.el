@@ -78,7 +78,6 @@
   (when (get-process "sonic-pi-server")
     (delete-process "sonic-pi-server")))
 
-;;;###autoload
 (defun sonic-pi-jack-in (&optional prompt-project)
   "Boot and connect to the SonicPi Server"
   (interactive)
@@ -92,19 +91,12 @@
       (sonic-pi-connect))
     (message "Ready!")))
 
-;;;###autoload
 (defun sonic-pi-connect (&optional prompt-project)
   "Assumes SonicPi server is running and connects"
   (interactive)
   (when (sonic-pi-valid-setup-p)
     (sonic-pi-osc-connect)
     (sonic-pi-messages-buffer-init)))
-
-;;;###autoload
-(eval-after-load 'ruby-mode
-  '(progn
-     (define-key ruby-mode-map (kbd "C-c M-j") 'sonic-pi-jack-in)
-     (define-key ruby-mode-map (kbd "C-c M-c") 'sonic-pi-connect)))
 
 (provide 'sonic-pi)
 

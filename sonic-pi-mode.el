@@ -15,10 +15,10 @@
   (sonic-pi-osc-send-command "stop-recording")
   (sonic-pi-osc-send-command-with-arg "save-recording" filename))
 
-;;sonic-pi-osc-send-command-with-arg
-
 (defvar sonic-pi-mode-map
   (let ((map (make-sparse-keymap)))
+    (define-key map (kbd "C-c M-j") 'sonic-pi-jack-in)
+    (define-key map (kbd "C-c M-c") 'sonic-pi-connect)
     (define-key map (kbd "C-c C-k") 'sonic-pi-send-buffer)
     (define-key map (kbd "C-c C-q") 'sonic-pi-quit)
     map))
