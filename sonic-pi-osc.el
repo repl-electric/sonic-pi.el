@@ -15,7 +15,9 @@
                                    (lambda (path &rest args) (sonic-pi-log-message path args))))))
 
 (defun sonic-pi-osc-send-text (start end)
-  (osc-send-message sonic-pi-osc-client "/run-code" (buffer-substring-no-properties start end)))
+  (if sonic-pi-osc-client
+      (osc-send-message sonic-pi-osc-client "/run-code" (buffer-substring-no-properties start end))
+    (message "Sonic-pi not running... `sonic-pi-jack-in` or `sonic-pi-connect`")))
 
 (defun sonic-pi-send-region ()
   "send a region to sonic via osc"
