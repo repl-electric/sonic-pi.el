@@ -9,6 +9,10 @@
   (sonic-pi-messages-buffer-cleanup)
   (sonic-pi-sonic-server-cleanup))
 
+(defun sonic-pi-stop-all        () (interactive) (sonic-pi-osc-send-command "stop-all-jobs"))
+(defun sonic-pi-start-recording () (interactive) (sonic-pi-osc-send-command "start-recording"))
+(defun sonic-pi-stop-recording  () (interactive) (sonic-pi-osc-send-command "stop-recording"))
+
 (defvar sonic-pi-mode-map
   (let ((map (make-sparse-keymap)))
     (define-key map (kbd "C-c C-k") 'sonic-pi-send-buffer)
