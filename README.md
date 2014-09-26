@@ -36,6 +36,8 @@ M-x sonic-pi-jack-in
 
 M-x sonic-pi-connect
 
+M-x sonic-pi-mode
+
 ;;Send buffer to sonic-pi
 
 C-c C-k 
