@@ -13,10 +13,7 @@
 
 (defconst sonic-pi-message-buffer-intro
   "Welcome to SonicPi http://sonic-pi.net, Audible computing.
- \\:O/     π=-      π=-
-   █       π=-   π   π=-   π=-
- .||.     π=-  π=-  π=-
-
+-=π   -=π=   -=π   -=π
 ")
 
 (defun sonic-pi-messages-buffer-init ()
