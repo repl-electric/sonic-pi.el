@@ -7,6 +7,7 @@
 (defvar sonic-pi-osc-server nil "Connection to recieve msgs from sonic pi")
 
 (defun sonic-pi-osc-connect ()
+  (if sonic-pi-osc-client   (delete-process sonic-pi-osc-client))
   (setq sonic-pi-osc-client (sonic-pi-osc-make-client "localhost" 4557))
   (if (not sonic-pi-osc-server)
       (setq sonic-pi-osc-server
@@ -28,7 +29,7 @@
 
 (defun sonic-pi-osc-make-client (host port)
   (make-network-process
-   :name "OSC client"
+   :name "sonic-pi.el OSC client"
    :host host
    :service port
    :type 'datagram
@@ -36,7 +37,7 @@
 
 (defun sonic-pi-osc-make-server (host port default-handler)
   (make-network-process
-   :name "OSC server"
+   :name "sonic-pi.el OSC server"
    :host host
    :server t
    :service port
@@ -45,14 +46,15 @@
    :family 'ipv4
    :plist (list :generic default-handler)))
 
-(defun sonic-pi-cleanup ()
-  "kill things"
+(defun sonic-pi-osc-cleanup ()
+  "Remove osc server and client"
   (delete-process sonic-pi-osc-client)
   (delete-process sonic-pi-osc-server)
   (setq sonic-pi-osc-server nil)
   (setq sonic-pi-osc-client nil))
 
 (defun sonic-pi-ping ()
+  "Test if sonic pi server is really, really there."
   (interactive)
   (osc-send-message sonic-pi-osc-client "/ping" "hi"))
 
