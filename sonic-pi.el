@@ -55,40 +55,49 @@
   :group 'sonic-pi)
 
 (defvar sonic-pi-server-bin "app/server/bin/sonic-pi-server.rb")
+(defvar sonic-pi-compile-extensions-bin "app/server/bin/compile-extensions.rb")
+
+(defun sonic-pi-server-cmd () (format "%s/%s" sonic-pi-path sonic-pi-server-bin))
 
 (defun sonic-pi--ruby-present-p ()
   "Check ruby is on the executable path"
   (executable-find "ruby"))
 
 (defun sonic-pi--sonic-pi-server-present-p ()
-  "Check sonic-pi server is executable"
-  (file-exists-p (sonic-pi-server)))
+  "Check sonic-pi server is exists"
+  (file-exists-p (format "%s/%s" sonic-pi-path sonic-pi-server-bin)))
 
-(defun sonic-pi-server () (format "%s/%s" sonic-pi-path sonic-pi-server-bin))
+(defun sonic-pi-valid-setup-p ()
+  (cond
+   ((not sonic-pi-path) (message "No sonic-pi-path set! Did you forget (setq sonic-pi-path \"YOUR_INSTALL_OF_SONIC_PI\")"))
+   ((not (sonic-pi--sonic-pi-server-present-p)) (message (format "Could not find a sonic-pi server in: %s" sonic-pi-path)))
+   ((not (sonic-pi--ruby-present-p)) (message "Could not find a ruby (1.9.3+) executable to run SonicPi"))
+   ((and sonic-pi-path (sonic-pi--sonic-pi-server-present-p) (sonic-pi--ruby-present-p)) t)))
+
+(defun sonic-pi-sonic-server-cleanup ()
+  (delete-process "sonic-pi-server"))
 
 ;;;###autoload
 (defun sonic-pi-jack-in (&optional prompt-project)
   "Boot and connect to the SonicPi Server"
   (interactive)
-  (cond
-   ((not sonic-pi-path) (message "No sonic-pi-path set! Did you forget (setq sonic-pi-path \"YOUR_INSTALL_OF_SONIC_PI\")"))
-   ((not (sonic-pi--sonic-pi-server-present-p)) (message (format "Could not find a sonic-pi server in: %s" sonic-pi-path)))
-   ((not (sonic-pi--ruby-present-p)) (message "Could not find a ruby (1.9.3+) executable to run SonicPi"))
-
-   ((and sonic-pi-path (sonic-pi--sonic-pi-server-present-p) (sonic-pi--ruby-present-p))
-    (let* ((cmd (sonic-pi-server)))
+  (when (sonic-pi-valid-setup-p)
+    (let* ((cmd (sonic-pi-server-cmd)))
+      (message "Starting SonicPi server...")
       (start-file-process-shell-command
        "sonic-pi-server"
        "sonic-pi-sonic-pi-boom"
        cmd)
-      (sonic-pi-connect)))))
+      (sonic-pi-connect))
+    (message "Ready!")))
 
 ;;;###autoload
 (defun sonic-pi-connect (&optional prompt-project)
-  "Connect to SonicPi Server"
+  "Assumes SonicPi server is running and connects"
   (interactive)
-  (sonic-pi-osc-connect)
-  (sonic-pi-messages-buffer-init))
+  (when (sonic-pi-valid-setup-p)
+    (sonic-pi-osc-connect)
+    (sonic-pi-messages-buffer-init)))
 
 ;;;###autoload
 (eval-after-load 'ruby-mode
