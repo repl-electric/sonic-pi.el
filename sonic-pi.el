@@ -20,6 +20,13 @@
 
 ;;; Commentary:
 
+;;; Installation:
+
+;;  M-x package-install sonic-pi
+;;
+;; ;;Set the location of your sonic-pi install
+;; (setq sonic-pi-path \"YOUR_INSTALL_OF_SONIC_PI\")
+
 ;;; Usage:
 
 ;; M-x sonic-pi-jack-in
@@ -37,7 +44,7 @@
 (require 'sonic-pi-osc)
 
 (defcustom sonic-pi-path
-  "/Users/josephwilk/Workspace/josephwilk/ruby/sonic-pi"
+  nil
   "Path to install of sonicpi"
   :type 'string
   :group 'sonic-pi)
@@ -54,14 +61,16 @@
 
 (defun sonic-pi-server () (format "%s/%s" sonic-pi-path sonic-pi-server-bin))
 
-;;;###Autoload
+;;;###autoload
 (defun sonic-pi-jack-in (&optional prompt-project)
   "Boot and connect to the SonicPi Server"
   (interactive)
   (cond
+   ((not sonic-pi-path) (message "No sonic-pi-path set! Did you forget (setq sonic-pi-path \"YOUR_INSTALL_OF_SONIC_PI\")"))
+   ((not (sonic-pi--sonic-pi-server-present-p)) (message (format "Could not find a sonic-pi server in: %s" sonic-pi-path)))
    ((not (sonic-pi--ruby-present-p)) (message "Could not find a ruby (1.9.3+) executable to run SonicPi"))
-   ((not (sonic-pi--ruby-present-p)) (message (format "Could not find a sonic-pi server in: %s" (sonic-pi-server))))
-   (t
+
+   ((and sonic-pi-path (sonic-pi--sonic-pi-server-present-p) (sonic-pi--ruby-present-p))
     (let* ((cmd (sonic-pi-server)))
       (start-file-process-shell-command
        "sonic-pi-server"
