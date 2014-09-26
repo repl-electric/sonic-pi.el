@@ -48,8 +48,10 @@
 
 (defun sonic-pi-osc-cleanup ()
   "Remove osc server and client"
-  (delete-process sonic-pi-osc-client)
-  (delete-process sonic-pi-osc-server)
+  (when sonic-pi-osc-client
+    (delete-process sonic-pi-osc-client))
+  (when sonic-pi-osc-server
+    (delete-process sonic-pi-osc-server))
   (setq sonic-pi-osc-server nil)
   (setq sonic-pi-osc-client nil))
 

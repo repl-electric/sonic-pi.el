@@ -54,7 +54,7 @@
   :type 'string
   :group 'sonic-pi)
 
-(defvar sonic-pi-server-bin "app/server/bin/sonic-pi-server.rb")
+(defvar sonic-pi-server-bin             "app/server/bin/sonic-pi-server.rb")
 (defvar sonic-pi-compile-extensions-bin "app/server/bin/compile-extensions.rb")
 
 (defun sonic-pi-server-cmd () (format "%s/%s" sonic-pi-path sonic-pi-server-bin))
@@ -64,7 +64,7 @@
   (executable-find "ruby"))
 
 (defun sonic-pi--sonic-pi-server-present-p ()
-  "Check sonic-pi server is exists"
+  "Check sonic-pi server exists"
   (file-exists-p (format "%s/%s" sonic-pi-path sonic-pi-server-bin)))
 
 (defun sonic-pi-valid-setup-p ()
@@ -75,7 +75,8 @@
    ((and sonic-pi-path (sonic-pi--sonic-pi-server-present-p) (sonic-pi--ruby-present-p)) t)))
 
 (defun sonic-pi-sonic-server-cleanup ()
-  (delete-process "sonic-pi-server"))
+  (when (get-process "sonic-pi-server")
+    (delete-process "sonic-pi-server")))
 
 ;;;###autoload
 (defun sonic-pi-jack-in (&optional prompt-project)

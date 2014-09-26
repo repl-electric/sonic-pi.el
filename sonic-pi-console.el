@@ -24,7 +24,8 @@
     (select-window (display-buffer origin))))
 
 (defun sonic-pi-messages-buffer-cleanup ()
-  (kill-buffer (sonic-pi-messages-buffer)))
+  (when (get-buffer (sonic-pi-messages-buffer))
+    (kill-buffer (sonic-pi-messages-buffer))))
 
 (defun sonic-pi-messages-buffer ()
   "Return or create the buffer given by `sonic-pi-message-buffer-name'.
@@ -51,12 +52,9 @@ The default buffer name is *sonic-pi-messages*."
         (set-window-point win (point-max))))))
 
 (defun sonic-pi--pp (level object)
-  (cl-flet ((error-color (str)(propertize str 'face `(:weight ultra-bold :foreground , "red")))
+  (cl-flet ((error-color  (str) (propertize str 'face `(:weight ultra-bold :foreground , "red")))
             (sample-color (str) (propertize str 'face `(:weight bold :foreground , "pink")))
-
-            (info-color (str) (propertize str 'face `(:weight ultra-bold :foreground , "orange")))
-            )
-
+            (info-color   (str) (propertize str 'face `(:weight ultra-bold :foreground , "orange"))))
     (cond
      ((string-match "\/info*"  level) (progn
                                         (insert "π> ")

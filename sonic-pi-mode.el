@@ -7,8 +7,7 @@
   (interactive)
   (sonic-pi-osc-cleanup)
   (sonic-pi-messages-buffer-cleanup)
-  (sonic-pi-sonic-server-cleanup)
-  )
+  (sonic-pi-sonic-server-cleanup))
 
 (defvar sonic-pi-mode-map
   (let ((map (make-sparse-keymap)))
