@@ -30,13 +30,13 @@ Add to your emacs init.el
 Start emacs `emacs my-first-sonic-pi.rb`
 
 ```
+M-x sonic-pi-mode
+
 M-x sonic-pi-jack-in
 
 ;;OR if you are already running sonic-pi-server
 
 M-x sonic-pi-connect
-
-M-x sonic-pi-mode
 
 ;;Send buffer to sonic-pi
 
