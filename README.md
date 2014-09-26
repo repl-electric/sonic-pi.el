@@ -26,3 +26,17 @@ Add to your emacs init.el
 (require 'sonic-pi)
 (setq sonic-pi-path "SONIC-PI-INSTALL-DIR")
 ```
+
+Start emacs `emacs my-first-sonic-pi.rb`
+
+```
+M-x sonic-pi-jack-in
+
+;;OR if you are already running sonic-pi-server
+
+M-x sonic-pi-connect
+
+;;Send buffer to sonic-pi
+
+C-c C-k 
+```
