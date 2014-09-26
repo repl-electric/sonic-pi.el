@@ -1,4 +1,4 @@
-;;; sonic-pi-console.el --- Object inspector -*- lexical-binding: t -*-
+;;; sonic-pi-console.el --- Message buffer handling -*- lexical-binding: t -*-
 
 (require 'ansi-color)
 

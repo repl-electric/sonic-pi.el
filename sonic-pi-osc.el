@@ -1,4 +1,4 @@
-;;; sonic-pi-osc.el --- Object inspector -*- lexical-binding: t -*-
+;;; sonic-pi-osc.el --- Manage OSC client and server for SonicPi communication -*- lexical-binding: t -*-
 
 (require 'osc)
 (require 'sonic-pi-console)

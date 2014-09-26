@@ -1,4 +1,4 @@
-;;; sonic-pi-mode.el --- Object inspector -*- lexical-binding: t -*-
+;;; sonic-pi-mode.el --- Minor mode for SonicPi interactions -*- lexical-binding: t -*-
 
 (require 'sonic-pi-osc)
 

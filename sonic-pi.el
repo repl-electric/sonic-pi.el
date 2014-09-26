@@ -1,4 +1,9 @@
 ;;; sonic-pi.el --- A Emacs client for SonicPi
+
+;; Copyright 2014 Joseph Wilk
+
+;; Author: Joseph Wilk <joe@josephwilk.net>
+;; URL: http://www.github.com/repl-electric/sonic-pi.el
 ;; Version: 0.1.0
 ;; Package-Requires: ((cl-lib "0.5") (osc "0.1") (emacs "24"))
 ;; Keywords: SonicPi, Ruby
