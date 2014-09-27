@@ -1,6 +1,8 @@
 ;;; sonic-pi-console.el --- Message buffer handling -*- lexical-binding: t -*-
 
+(require 'cl-lib)
 (require 'ansi-color)
+(require 'dash)
 
 (defconst sonic-pi-message-buffer-name "*sonic-pi-messages*")
 (defcustom sonic-pi-log-messages t
