@@ -89,7 +89,7 @@
           (message "Starting SonicPi server...")
           (start-file-process-shell-command
            "sonic-pi-server"
-           "sonic-pi-sonic-pi-boom"
+           "*sonic-pi-server-messages*"
            cmd)))
     (sonic-pi-connect)
     (message "Ready!")))
