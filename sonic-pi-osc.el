@@ -1,6 +1,7 @@
 ;;; sonic-pi-osc.el --- Manage OSC client and server for SonicPi communication -*- lexical-binding: t -*-
 
 (require 'osc)
+(require 'cl)
 (require 'sonic-pi-console)
 
 (defvar sonic-pi-osc-client nil "Connection to send msgs to sonic pi")
