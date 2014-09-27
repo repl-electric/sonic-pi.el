@@ -5,7 +5,7 @@
 ;; Author: Joseph Wilk <joe@josephwilk.net>
 ;; URL: http://www.github.com/repl-electric/sonic-pi.el
 ;; Version: 0.1.0
-;; Package-Requires: ((cl-lib "0.5") (osc "0.1") (emacs "24"))
+;; Package-Requires: ((cl-lib "0.5") (osc "0.1") (dash "2.2.0") (emacs "24"))
 ;; Keywords: SonicPi, Ruby
 
 ;; This program is free software: you can redistribute it and/or modify
