@@ -69,10 +69,11 @@
 
 (defun sonic-pi-valid-setup-p ()
   (cond
-   ((not sonic-pi-path) (message "No sonic-pi-path set! Did you forget (setq sonic-pi-path \"YOUR_INSTALL_OF_SONIC_PI\")"))
-   ((not (sonic-pi--sonic-pi-server-present-p)) (message (format "Could not find a sonic-pi server in: %s" sonic-pi-path)))
-   ((not (sonic-pi--ruby-present-p)) (message "Could not find a ruby (1.9.3+) executable to run SonicPi"))
-   ((and sonic-pi-path (sonic-pi--sonic-pi-server-present-p) (sonic-pi--ruby-present-p)) t)))
+   ((not sonic-pi-path) (progn (message "No sonic-pi-path set! Did you forget (setq sonic-pi-path \"YOUR_INSTALL_OF_SONIC_PI\")")) nil)
+   ((not (sonic-pi--sonic-pi-server-present-p)) (progn (message (format "Could not find a sonic-pi server in: %s" sonic-pi-path)) nil))
+   ((not (sonic-pi--ruby-present-p)) (progn (message "Could not find a ruby (1.9.3+) executable to run SonicPi") nil))
+   ((and sonic-pi-path (sonic-pi--sonic-pi-server-present-p) (sonic-pi--ruby-present-p)) t)
+   (t nil)))
 
 (defun sonic-pi-sonic-server-cleanup ()
   (when (get-process "sonic-pi-server")
@@ -83,15 +84,17 @@
   "Boot and connect to the SonicPi Server"
   (interactive)
   (when (sonic-pi-valid-setup-p)
-    (let* ((cmd (sonic-pi-server-cmd)))
-      (message "Starting SonicPi server...")
-      (start-file-process-shell-command
-       "sonic-pi-server"
-       "sonic-pi-sonic-pi-boom"
-       cmd)
-      (sonic-pi-connect))
+    (if (not (get-process "sonic-pi-server"))
+        (let* ((cmd (sonic-pi-server-cmd)))
+          (message "Starting SonicPi server...")
+          (start-file-process-shell-command
+           "sonic-pi-server"
+           "sonic-pi-sonic-pi-boom"
+           cmd)))
+    (sonic-pi-connect)
     (message "Ready!")))
 
+;;;###autoload
 (defun sonic-pi-connect (&optional prompt-project)
   "Assumes SonicPi server is running and connects"
   (interactive)
