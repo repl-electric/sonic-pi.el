@@ -20,6 +20,7 @@
     (define-key map (kbd "C-c M-j") 'sonic-pi-jack-in)
     (define-key map (kbd "C-c M-c") 'sonic-pi-connect)
     (define-key map (kbd "C-c C-k") 'sonic-pi-send-buffer)
+    (define-key map (kbd "C-c C-r") 'sonic-pi-send-region)
     (define-key map (kbd "C-c C-q") 'sonic-pi-quit)
     (define-key map (kbd "C-c C-b") 'sonic-pi-stop-all)
     map))
