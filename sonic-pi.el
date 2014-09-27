@@ -78,6 +78,7 @@
   (when (get-process "sonic-pi-server")
     (delete-process "sonic-pi-server")))
 
+;;;###autoload
 (defun sonic-pi-jack-in (&optional prompt-project)
   "Boot and connect to the SonicPi Server"
   (interactive)
