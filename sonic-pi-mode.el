@@ -9,6 +9,7 @@
   (sonic-pi-messages-buffer-cleanup)
   (sonic-pi-sonic-server-cleanup))
 
+(defun sonic-pi-restart         () (interactive) (sonic-pi-quit) (sonic-pi-jack-in))
 (defun sonic-pi-stop-all        () (interactive) (sonic-pi-osc-send-command "stop-all-jobs"))
 (defun sonic-pi-start-recording () (interactive) (sonic-pi-osc-send-command "start-recording"))
 (defun sonic-pi-stop-recording  (filename) (interactive "FSave to:")
