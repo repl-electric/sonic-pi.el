@@ -34,7 +34,14 @@ Add to your emacs init.el
 ```lisp
 (add-to-list 'load-path "~/.sonic-pi.el/")
 (require 'sonic-pi)
-(setq sonic-pi-path "SONIC-PI-INSTALL-DIR")
+(setq sonic-pi-path "SONIC-PI-INSTALL-DIR/") ; Must end with "/"
+
+;; Optionally define a hook
+(add-hook 'sonic-pi-mode-hook
+          (lambda ()
+            ;; This setq can go here instead if you wish
+            (setq sonic-pi-path "SONIC-PI-INSTALL-DIR/")
+            (define-key ruby-mode-map "\C-c\C-b" 'sonic-pi-stop-all)))
 ```
 
 Start emacs `emacs my-first-sonic-pi.rb`
