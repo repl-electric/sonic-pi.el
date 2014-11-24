@@ -11,12 +11,22 @@ SonicPi (http://sonic-pi.net/) was created by Sam Aaron.
 Prerequisites:
 
 * A checkout of sonic-pi https://github.com/samaaron/sonic-pi
+* The `dash` package
+* The `osc` package
+* SuperCollider
 * Ruby 1.9.3+
 
 ```
 git clone git@github.com:samaaron/sonic-pi.git
 cd sonic-pi && app/server/bin/compile-extensions.rb
 git clone git@github.com:repl-electric/sonic-pi.el.git ~/.sonic-pi.el`
+```
+
+Install the required packages
+
+```
+M-x package-install dash
+M-x package-install osc
 ```
 
 Add to your emacs init.el
