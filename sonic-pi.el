@@ -57,7 +57,7 @@
 (defvar sonic-pi-server-bin             "app/server/bin/sonic-pi-server.rb")
 (defvar sonic-pi-compile-extensions-bin "app/server/bin/compile-extensions.rb")
 
-(defun sonic-pi-server-cmd () (format "%s/%s" sonic-pi-path sonic-pi-server-bin))
+(defun sonic-pi-server-cmd () (format "%s%s" sonic-pi-path sonic-pi-server-bin))
 
 (defun sonic-pi--ruby-present-p ()
   "Check ruby is on the executable path"
