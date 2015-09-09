@@ -6,15 +6,12 @@
 
 (require 'sonic-pi-console)
 
-(setq eval-sexp-fu-flash-face
-      '((((class color)) (:background "#111111" :foreground "#000000" :bold f))))
-
 (defface eval-sonic-pi-flash
   '((((class color)) (:background "#F23444" :foreground "white" :bold f))
     (t (:inverse-video t)))
   "Face for highlighting sexps during evaluation."
   :group 'eval-sonic-pi)
-(defface eval-sexp-fu-flash-error
+(defface eval-sonic-pi-flash-error
   '((((class color)) (:foreground "red" :bold f))
     (t (:inverse-video t)))
   "Face for highlighting sexps signaled errors during evaluation."
