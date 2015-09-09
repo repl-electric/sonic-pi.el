@@ -45,16 +45,17 @@
 (defun sonic-pi-send-region ()
   "send a region to sonic via osc"
   (interactive)
+  (sonic-pi-osc-send-text (region-beginning) (region-end))
   (hlt-highlight-regexp-region (region-beginning) (region-end) ".+" 'eval-sonic-pi-flash f)
   (run-at-time 0.5 nil 'hlt-highlight -1)
-  (sonic-pi-osc-send-text (region-beginning) (region-end)))
+)
 
 (defun sonic-pi-send-buffer ()
   "send the current buffer to sonic via osc"
   (interactive)
+  (sonic-pi-osc-send-text (point-min) (point-max))
   (hlt-highlight-regexp-region nil nil ".+" 'eval-sonic-pi-flash f)
-  (run-at-time 0.5 nil 'hlt-highlight -1)
-  (sonic-pi-osc-send-text (point-min) (point-max)))
+  (run-at-time 0.5 nil 'hlt-highlight -1))
 
 (defun sonic-pi-osc-make-client (host port)
   (make-network-process
