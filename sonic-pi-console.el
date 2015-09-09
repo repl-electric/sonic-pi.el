@@ -68,7 +68,7 @@ The default buffer name is *sonic-pi-messages*."
         (save-match-data ; is usually a good idea
           (and (string-match "\\([0-9]+\\)" (second object))
                (setq line-error (format "line-> [%s]" (match-string 1 (second object))))))
-        (error (format "%s" (second object)))
+        (message (format "Error: %s" (second object)))
 
         (insert (error-color (format "π> Error: %s\n" (second object))))))
 
