@@ -4,6 +4,24 @@
 (require 'cl)
 (require 'sonic-pi-console)
 
+(require 'highlight)
+(require 'eval-sexp-fu)
+
+(setq eval-sexp-fu-flash-face
+      '((((class color)) (:background "#656555" :foreground "#dcdccc" :bold f))))
+
+(defface eval-sexp-fu-flash
+  '((((class color)) (:background "blue" :foreground "white" :bold f))
+    (t (:inverse-video t)))
+  "Face for highlighting sexps during evaluation."
+  :group 'eval-sexp-fu)
+(defface eval-sexp-fu-flash-error
+  '((((class color)) (:foreground "red" :bold f))
+    (t (:inverse-video t)))
+  "Face for highlighting sexps signaled errors during evaluation."
+  :group 'eval-sexp-fu)
+
+
 (defvar sonic-pi-osc-client nil "Connection to send msgs to sonic pi")
 (defvar sonic-pi-osc-server nil "Connection to recieve msgs from sonic pi")
 
@@ -36,7 +54,11 @@
 (defun sonic-pi-send-buffer ()
   "send the current buffer to sonic via osc"
   (interactive)
-  (sonic-pi-osc-send-text (point-min) (point-max)))
+  (sonic-pi-osc-send-text (point-min) (point-max))
+
+  (hlt-highlight-regexp-region nil nil ".+" 'eval-sexp-fu-flash)
+  (run-at-time 0.5 nil 'hlt-highlight -1)
+  )
 
 (defun sonic-pi-osc-make-client (host port)
   (make-network-process
