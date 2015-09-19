@@ -5,6 +5,9 @@
 (require 'highlight)
 
 (require 'sonic-pi-console)
+(defvar f false)
+
+(defvar flash-time 0.5)
 
 (defface eval-sonic-pi-flash
   '((((class color)) (:background "#F23444" :foreground "white" :bold f))
@@ -47,15 +50,14 @@
   (interactive)
   (sonic-pi-osc-send-text (region-beginning) (region-end))
   (hlt-highlight-regexp-region (region-beginning) (region-end) ".+" 'eval-sonic-pi-flash f)
-  (run-at-time 0.5 nil 'hlt-highlight -1)
-)
+  (run-at-time flash-time nil 'hlt-unhighlight-region nil nil f))
 
 (defun sonic-pi-send-buffer ()
   "send the current buffer to sonic via osc"
   (interactive)
   (sonic-pi-osc-send-text (point-min) (point-max))
   (hlt-highlight-regexp-region nil nil ".+" 'eval-sonic-pi-flash f)
-  (run-at-time 0.5 nil 'hlt-highlight -1))
+  (run-at-time flash-time nil 'hlt-unhighlight-region nil nil f))
 
 (defun sonic-pi-osc-make-client (host port)
   (make-network-process
