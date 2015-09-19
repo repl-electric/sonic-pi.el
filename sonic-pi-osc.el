@@ -57,7 +57,7 @@
   (interactive)
   (sonic-pi-osc-send-text (point-min) (point-max))
   (hlt-highlight-regexp-region nil nil ".+" 'eval-sonic-pi-flash f)
-  (run-at-time flash-time nil 'hlt-unhighlight-region nil nil f))
+  (run-at-time flash-time nil 'hlt-unhighlight-region))
 
 (defun sonic-pi-osc-make-client (host port)
   (make-network-process
