@@ -32,9 +32,9 @@
             (sonic-pi-osc-make-server "localhost" 4558
                                    (lambda (path &rest args) (sonic-pi-log-message path args))))))
 
-(defun sonic-pi-osc-send-command-with-arg (cmd arg)
+(defun sonic-pi-osc-send-command-with-arg (cmd arg1 arg2)
   (if sonic-pi-osc-client
-      (osc-send-message sonic-pi-osc-client (format "/%s" cmd) arg)
+      (osc-send-message sonic-pi-osc-client (format "/%s" cmd) arg1 arg2)
     (message "Sonic-pi not running... `sonic-pi-jack-in` or `sonic-pi-connect`")))
 
 (defun sonic-pi-osc-send-command (cmd)
@@ -43,7 +43,7 @@
     (message "Sonic-pi not running... `sonic-pi-jack-in` or `sonic-pi-connect`")))
 
 (defun sonic-pi-osc-send-text (start end)
-  (sonic-pi-osc-send-command-with-arg "run-code" (buffer-substring-no-properties start end)))
+  (sonic-pi-osc-send-command-with-arg "run-code" (buffer-name) (buffer-substring-no-properties start end)))
 
 (defun sonic-pi-send-region ()
   "send a region to sonic via osc"
