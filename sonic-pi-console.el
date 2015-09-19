@@ -62,6 +62,11 @@ The default buffer name is *sonic-pi-messages*."
                                         (insert "π> ")
                                         (insert (info-color (format "%s\n" (car object))))))
 
+     ((string-match "\/syntax_error" level)
+     (progn
+       (message (format "Error: %s" (second object)))
+       (insert (error-color (format "π> Syntax Error: %s\n" (second object))))
+     ))
      ((string-match "\/error*" level)
       (progn
 
