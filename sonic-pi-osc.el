@@ -2,10 +2,8 @@
 
 (require 'osc)
 (require 'cl)
-(require 'highlight)
 
 (require 'sonic-pi-console)
-(defvar f false)
 
 (defvar flash-time 0.5)
 
@@ -49,15 +47,17 @@
   "send a region to sonic via osc"
   (interactive)
   (sonic-pi-osc-send-text (region-beginning) (region-end))
-  (hlt-highlight-regexp-region (region-beginning) (region-end) ".+" 'eval-sonic-pi-flash f)
-  (run-at-time flash-time nil 'hlt-unhighlight-region nil nil f))
+  (let* ((overlay (make-overlay (region-beginning) (region-end))))
+    (overlay-put overlay 'face 'eval-sonic-pi-flash))
+  (run-at-time flash-time nil 'remove-overlays nil nil 'face 'eval-sonic-pi-flash))
 
 (defun sonic-pi-send-buffer ()
   "send the current buffer to sonic via osc"
   (interactive)
   (sonic-pi-osc-send-text (point-min) (point-max))
-  (hlt-highlight-regexp-region nil nil ".+" 'eval-sonic-pi-flash f)
-  (run-at-time flash-time nil 'hlt-unhighlight-region))
+  (let* ((overlay (make-overlay (point-min) (point-max))))
+    (overlay-put overlay 'face 'eval-sonic-pi-flash))
+  (run-at-time flash-time nil 'remove-overlays nil nil 'face 'eval-sonic-pi-flash))
 
 (defun sonic-pi-osc-make-client (host port)
   (make-network-process
