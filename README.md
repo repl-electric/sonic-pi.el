@@ -13,6 +13,7 @@ Prerequisites:
 * A checkout of sonic-pi https://github.com/samaaron/sonic-pi
 * The `dash` package
 * The `osc` package
+* Highlight from EmacsWiki https://www.emacswiki.org/emacs/highlight.el
 * SuperCollider
 * Ruby 1.9.3+
 
