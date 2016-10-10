@@ -38,8 +38,6 @@
 
 ;;; Code:
 
-(defconst false nil)
-
 (defgroup sonic-pi nil
   "A client for interacting with the SonicPi Server."
   :prefix "sonic-pi-"
