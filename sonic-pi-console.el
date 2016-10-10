@@ -12,9 +12,9 @@
 
 (defconst sonic-pi-message-buffer-max-size 1000000)
 (defconst sonic-pi-message-buffer-reduce-denominator 4)
-(defconst sonic-pi-mid-str   " ├─ ")
-(defconst sonic-pi-end-str   " └─ ")
-(defconst sonic-pi-start-str " │ ")
+(defconst sonic-pi-mid-str   "   ├─ ")
+(defconst sonic-pi-end-str   "   └─ ")
+(defconst sonic-pi-start-str "   │ ")
 
 (defconst sonic-pi-ignore-cues 1)
 
@@ -60,7 +60,7 @@ The default buffer name is *sonic-pi-messages*."
 
 (defun sonic-pi--pp (level object)
   (cl-flet ((error-color  (str) (propertize str 'face `(:weight ultra-bold :foreground , "red")))
-            (sample-color (str) (propertize str 'face `(:weight bold :foreground , "purple")))
+            (sample-color (str) (propertize str 'face `(:weight bold :foreground , "green")))
             (info-color   (str) (propertize str 'face `(:weight ultra-bold :foreground , "orange"))))
     (cond
      ((string-match "\/info*"  level) (progn
@@ -78,9 +78,8 @@ The default buffer name is *sonic-pi-messages*."
         (save-match-data ; is usually a good idea
           (and (string-match "\\([0-9]+\\)" (second object))
                (setq line-error (format "line-> [%s]" (match-string 1 (second object))))))
-        (message (format "Error: %s" (second object)))
-
-        (insert (error-color (format "π> Error: %s\n" (second object))))))
+        (message (format "   Error: %s" (second object)))
+        (insert (error-color (format "   π> Error: %s\n" (second object))))))
 
      ((string-match "\/multi_message*" level)
       ;;TODO: multi_message does not batch messages together,
@@ -109,13 +108,16 @@ The default buffer name is *sonic-pi-messages*."
                                          sonic-pi-mid-str))))
                        (progn
                          (when (and (= msg-type 4) (= sonic-pi-ignore-cues 0))
-                           (progn (insert (sample-color (format "  %s %s\n" format-s msg-data)))))
+                           (progn (insert (sample-color (format "%s %s\n" format-s msg-data)))))
                          (when (= msg-type 0)
-                           (progn (insert (sample-color (format "  %s %s\n" format-s msg-data)))))
+                           (progn (insert (sample-color (format "%s %s\n" format-s msg-data)))))
                          (when (and (not (= msg-type 4)) (not (= msg-type 0)))
-                           (progn (insert (info-color (format "  %s %s\n" format-s msg-data))))))
+                           (progn (insert (info-color (format "%s %s\n" format-s msg-data))))))
                        )))
           )))
+
+     ((string-match "/all-jobs-completed" level)   (progn (insert (error-color "\nπ> Live code is now dead code.\n"))))
+
      (t (insert (format "π> %s %s\n" level object))))))
 
 (provide 'sonic-pi-console)
