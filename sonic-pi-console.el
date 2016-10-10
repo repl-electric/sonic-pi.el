@@ -59,27 +59,33 @@ The default buffer name is *sonic-pi-messages*."
         (set-window-point win (point-max))))))
 
 (defun sonic-pi--pp (level object)
-  (cl-flet ((error-color  (str) (propertize str 'face `(:weight ultra-bold :foreground , "red")))
-            (sample-color (str) (propertize str 'face `(:weight bold :foreground , "green")))
-            (info-color   (str) (propertize str 'face `(:weight ultra-bold :foreground , "orange"))))
+  (cl-flet ((text-color   (str) (propertize str 'face `(:weight normal     :foreground , "white")))
+            (error-color  (str) (propertize str 'face `(:weight ultra-bold :foreground , "red")))
+            (thread-color (str) (propertize str 'face `(:weight ultra-bold :foreground , "green")))
+            (stdout-color (str) (propertize str 'face `(:weight ultra-bold :foreground , "orange")))
+            (sample-color (str) (propertize str 'face `(:weight ultra-bold :foreground , "blue")))
+            (info-color   (str) (propertize str 'face `(:weight normal     :foreground , "yellow"))))
     (cond
      ((string-match "\/info*"  level) (progn
                                         (insert "π> ")
-                                        (insert (info-color (format "%s\n" (car object))))
+                                        (insert (info-color (format "%s\n" (last object))))
                                         ))
 
      ((string-match "\/syntax_error" level)
-     (progn
+     ((progn )
        (message (format "Error: %s" (second object)))
        (insert (error-color (format "π> Syntax Error: %s\n" (second object))))
      ))
-     ((string-match "\/error*" level)
+     ((string-match "\/error" level)
       (progn
         (save-match-data ; is usually a good idea
           (and (string-match "\\([0-9]+\\)" (second object))
                (setq line-error (format "line-> [%s]" (match-string 1 (second object))))))
         (message (format "   Error: %s" (second object)))
-        (insert (error-color (format "   π> Error: %s\n" (second object))))))
+        (insert (error-color (replace-regexp-in-string
+                              "&#39" "'"
+                              (replace-regexp-in-string "&gt;" ">"
+                                                        (format "\nπ> Error: %s\n\n" (second object))))) )))
 
      ((string-match "\/multi_message*" level)
       ;;TODO: multi_message does not batch messages together,
@@ -91,32 +97,38 @@ The default buffer name is *sonic-pi-messages*."
               (run-time (third object))
               (msg-count (fourth object))
               (data (nthcdr 4 object)))
-          (progn
-            (insert (format "[Run %s, Time %s" job-id run-time))
-            (if (not (string= "" thread-name))
-                (insert (format ", Thread %s" thread-name)))
-            (insert "]\n")
-            (cl-loop for msg-type in data by (-partial 'nthcdr 2)
-                     for msg-data in (cdr data) by (-partial 'nthcdr 2)
-                     for idx from 0 to msg-count
-                     do
-                     (let ((format-s (if (and (= idx 1) (> msg-count 2))
-                                         sonic-pi-start-str
-                                       (if (or (= msg-count 2)
-                                               (= idx (+ 1 (/ msg-count 2))))
-                                           sonic-pi-end-str
-                                         sonic-pi-mid-str))))
-                       (progn
-                         (when (and (= msg-type 4) (= sonic-pi-ignore-cues 0))
-                           (progn (insert (sample-color (format "%s %s\n" format-s msg-data)))))
-                         (when (= msg-type 0)
-                           (progn (insert (sample-color (format "%s %s\n" format-s msg-data)))))
-                         (when (and (not (= msg-type 4)) (not (= msg-type 0)))
-                           (progn (insert (info-color (format "%s %s\n" format-s msg-data))))))
-                       )))
+          (when (> msg-count 1)
+            (progn
+              (insert "[")
+              (if (not (string= "" thread-name))
+                  (insert (format "%s" (thread-color thread-name))))
+              (insert "]\n")
+              (cl-loop for msg-type in data by (-partial 'nthcdr 2)
+                       for msg-data in (cdr data) by (-partial 'nthcdr 2)
+                       for idx from 0 to msg-count
+                       do
+                       (let ((format-s (if (and (= idx 1) (> msg-count 2))
+                                           sonic-pi-start-str
+                                         (if (or (= msg-count 2)
+                                                 (= idx (+ 1 (/ msg-count 2))))
+                                             sonic-pi-end-str
+                                           sonic-pi-mid-str))))
+                         (progn
+                           (when (and (= msg-type 4) (= sonic-pi-ignore-cues 0))
+                             (progn (insert (sample-color (format "%s %s\n" format-s msg-data)))))
+                           (when (= msg-type 0)
+                             (let ((mangled-data (split-string msg-data ",")))
+                               (insert (text-color (format "%s %s " format-s (first mangled-data))))
+                               (insert (sample-color (format "%s" (nth 1 mangled-data))))
+                               (when (> (length mangled-data) 2)
+                                 (insert (text-color (format " %s" (nthcdr 2 mangled-data)))))
+                               (insert "\n")))
+                           (when (and (not (= msg-type 4)) (not (= msg-type 0)))
+                             (progn (insert (stdout-color (format "%s %s\n" format-s msg-data))))))
+                         ))))
           )))
 
-     ((string-match "/all-jobs-completed" level)   (progn (insert (error-color "\nπ> Live code is now dead code.\n"))))
+     ((string-match "/all-jobs-completed" level)   (progn (insert (error-color "\nπ> Live code is now dead code.\n\n"))))
 
      (t (insert (format "π> %s %s\n" level object))))))
 
