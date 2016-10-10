@@ -5,7 +5,6 @@
 (require 'highlight)
 
 (require 'sonic-pi-console)
-(defvar f false)
 
 (defvar flash-time 0.5)
 
