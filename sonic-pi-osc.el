@@ -24,13 +24,17 @@
 (defvar sonic-pi-osc-client nil "Connection to send msgs to sonic pi")
 (defvar sonic-pi-osc-server nil "Connection to recieve msgs from sonic pi")
 
+(defun sonic-pi-osc-message-handler (path &rest args)
+  (interactive)
+  (sonic-pi-log-message path args))
+
 (defun sonic-pi-osc-connect ()
   (if sonic-pi-osc-client   (delete-process sonic-pi-osc-client))
   (setq sonic-pi-osc-client (sonic-pi-osc-make-client "localhost" 4557))
   (if (not sonic-pi-osc-server)
       (setq sonic-pi-osc-server
             (sonic-pi-osc-make-server "localhost" 4558
-                                   (lambda (path &rest args) (sonic-pi-log-message path args))))))
+                                      sonic-pi-osc-message-handler))))
 
 (defun sonic-pi-osc-send-command-with-arg (cmd arg1 arg2)
   (if sonic-pi-osc-client
