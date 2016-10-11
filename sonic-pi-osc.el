@@ -7,6 +7,7 @@
 (require 'sonic-pi-console)
 
 (defvar flash-time 0.5)
+(defvar f false)
 
 (defface eval-sonic-pi-flash
   '((((class color)) (:background "#F23444" :foreground "white" :bold f))
