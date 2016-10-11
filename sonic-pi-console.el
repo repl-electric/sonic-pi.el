@@ -82,7 +82,7 @@ The default buffer name is *sonic-pi-messages*                         . "
             (and (string-match "line \\([0-9]+\\)" (second object))
                  (setq line-error (string-to-number (format "%s" (match-string 1 (second object)))))))
 
-          (message (format "%i" error-line))
+          (message (format "Line: %i" line-error))
           (comment
            (with-current-buffer (get-file-buffer "test.rb")
              (let ((error-line line-error))
