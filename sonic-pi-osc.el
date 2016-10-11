@@ -41,13 +41,23 @@
       (osc-send-message sonic-pi-osc-client (format "/%s" cmd) arg1 arg2)
     (message "Sonic-pi not running... `sonic-pi-jack-in` or `sonic-pi-connect`")))
 
+(defun sonic-pi-osc-send-command-with-arg4 (cmd arg1 arg2 arg3 arg4)
+  (if sonic-pi-osc-client
+      (osc-send-message sonic-pi-osc-client (format "/%s" cmd) arg1 arg2 arg3 arg4)
+    (message "Sonic-pi not running... `sonic-pi-jack-in` or `sonic-pi-connect`")))
+
+
 (defun sonic-pi-osc-send-command (cmd)
   (if sonic-pi-osc-client
       (osc-send-message sonic-pi-osc-client (format "/%s" cmd))
     (message "Sonic-pi not running... `sonic-pi-jack-in` or `sonic-pi-connect`")))
 
 (defun sonic-pi-osc-send-text (start end)
-  (sonic-pi-osc-send-command-with-arg "run-code" (buffer-name) (buffer-substring-no-properties start end)))
+  (sonic-pi-osc-send-command-with-arg4 "save-and-run-buffer"
+                                      "sonicpi-emacs"
+                                      (buffer-name)
+                                      (buffer-substring-no-properties start end)
+                                      (buffer-name)))
 
 (defun sonic-pi-send-region ()
   "send a region to sonic via osc"
@@ -59,6 +69,8 @@
 (defun sonic-pi-send-buffer ()
   "send the current buffer to sonic via osc"
   (interactive)
+  (dolist (o (overlays-in (window-start) (window-end)))
+    (delete-overlay o))
   (sonic-pi-osc-send-text (point-min) (point-max))
   (hlt-highlight-regexp-region nil nil ".+" 'eval-sonic-pi-flash f)
   (run-at-time flash-time nil 'hlt-unhighlight-region))

@@ -82,8 +82,22 @@ The default buffer name is *sonic-pi-messages*                         . "
             (and (string-match "line \\([0-9]+\\)" (second object))
                  (setq line-error (string-to-number (format "%s" (match-string 1 (second object)))))))
 
-          (message (format "Line: %i" line-error))
+          (save-match-data ; is usually a good idea
+            (and (string-match "buffer \\(.+\\)," (second object))
+                 (setq error-buffer (format "%s" (match-string 1 (second object))))))
 
+          (message (format "error: %s" buffer-file))
+
+          (with-current-buffer (get-file-buffer buffer-file)
+            (let ((error-line line-error))
+              (goto-line error-line)
+              (let ((ov (make-overlay (line-beginning-position) (+ 1 (line-beginning-position)))))
+                (overlay-put ov
+                             'before-string
+                             (propertize " "
+                                         'display
+                                         `((margin left-margin)
+                                           , (concat "\u294F" (overlay-get ov 'linum-str))))))))
 
           (insert (error-color (replace-regexp-in-string
                                 "&#39" "'"
