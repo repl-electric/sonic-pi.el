@@ -29,6 +29,8 @@
 ;;;###autoload
 (define-minor-mode sonic-pi-mode
   "Minor mode for SonicPi interaction from a Ruby buffer."
+  :init-value nil
+  :global     nil
   :lighter " π"
   :keymap sonic-pi-mode-map)
 
