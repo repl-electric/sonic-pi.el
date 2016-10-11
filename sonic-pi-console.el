@@ -60,7 +60,7 @@ The default buffer name is *sonic-pi-messages*."
 
 (defun sonic-pi--pp (level object)
   (cl-flet ((text-color   (str) (propertize str 'face `(:weight normal     :foreground , "white")))
-            (error-color  (str) (propertize str 'face `(:weight ultra-bold :foreground , "red")))
+            (error-color  (str) (propertize str 'face `(:weight ultra-bold :background , "red")))
             (thread-color (str) (propertize str 'face `(:weight ultra-bold :foreground , "green")))
             (stdout-color (str) (propertize str 'face `(:weight ultra-bold :foreground , "orange")))
             (sample-color (str) (propertize str 'face `(:weight ultra-bold :foreground , "blue")))
@@ -81,11 +81,11 @@ The default buffer name is *sonic-pi-messages*."
         (save-match-data ; is usually a good idea
           (and (string-match "\\([0-9]+\\)" (second object))
                (setq line-error (format "line-> [%s]" (match-string 1 (second object))))))
-        (message (format "   Error: %s" (second object)))
+        (message (format "   Error: %s" line-error))
         (insert (error-color (replace-regexp-in-string
                               "&#39" "'"
                               (replace-regexp-in-string "&gt;" ">"
-                                                        (format "\nπ> Error: %s\n\n" (second object))))) )))
+                                                        (format "π> Error: %s\n" (second object))))))))
 
      ((string-match "\/multi_message*" level)
       ;;TODO: multi_message does not batch messages together,
@@ -128,7 +128,9 @@ The default buffer name is *sonic-pi-messages*."
                          ))))
           )))
 
-     ((string-match "/all-jobs-completed" level)   (progn (insert (error-color "\nπ> Live code is now dead code.\n\n"))))
+     ((string-match "/all-jobs-completed" level)
+      (insert "π> ")
+      (insert (info-color "(Live code is now dead code.)\n")))
 
      (t (insert (format "π> %s %s\n" level object))))))
 
