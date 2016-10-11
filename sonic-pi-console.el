@@ -83,18 +83,7 @@ The default buffer name is *sonic-pi-messages*                         . "
                  (setq line-error (string-to-number (format "%s" (match-string 1 (second object)))))))
 
           (message (format "Line: %i" line-error))
-          (comment
-           (with-current-buffer (get-file-buffer "test.rb")
-             (let ((error-line line-error))
-               (goto-line error-line)
-               (let ((ov (make-overlay (line-beginning-position) (+ 1 (line-beginning-position))
-                                       (get-file-buffer "test.rb"))))
-                 (overlay-put ov
-                              'before-string
-                              (propertize " "
-                                          'display
-                                          `((margin left-margin)
-                                            , (concat "\u294F" (overlay-get ov 'linum-str)))))))))
+
 
           (insert (error-color (replace-regexp-in-string
                                 "&#39" "'"
