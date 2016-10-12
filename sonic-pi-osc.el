@@ -33,7 +33,7 @@
   (if (not sonic-pi-osc-server)
       (setq sonic-pi-osc-server
             (sonic-pi-osc-make-server "localhost" 4558
-                                      sonic-pi-osc-message-handler))))
+                                      'sonic-pi-osc-message-handler))))
 
 (defun sonic-pi-osc-send-command-with-arg (cmd arg1 arg2)
   (if sonic-pi-osc-client
