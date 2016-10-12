@@ -54,8 +54,8 @@
   :type 'string
   :group 'sonic-pi)
 
-(defvar sonic-pi-server-bin             "app/server/bin/sonic-pi-server.rb")
-(defvar sonic-pi-compile-extensions-bin "app/server/bin/compile-extensions.rb")
+(defvar sonic-pi-server-bin             "server/bin/sonic-pi-server.rb")
+(defvar sonic-pi-compile-extensions-bin "server/bin/compile-extensions.rb")
 
 (defun sonic-pi-server-cmd () (format "%s%s" sonic-pi-path sonic-pi-server-bin))
 
