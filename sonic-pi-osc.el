@@ -1,7 +1,7 @@
 ;;; sonic-pi-osc.el --- Manage OSC client and server for SonicPi communication -*- lexical-binding: t -*-
 
 (require 'osc)
-(require 'cl)
+(require 'cl-lib)
 (require 'highlight)
 
 (require 'sonic-pi-console)

@@ -73,18 +73,18 @@ The default buffer name is *sonic-pi-messages*                         . "
                                           ))
 
        ((string-match "\/syntax_error" level)
-        ((message (format "Error: %s" (second object)))
-         (insert (error-color (format "π> Syntax Error: %s\n" (second object))))
+        ((message (format "Error: %s" (cl-second object)))
+         (insert (error-color (format "π> Syntax Error: %s\n" (cl-second object))))
          ))
        ((string-match "\/error" level)
         (progn
           (save-match-data ; is usually a good idea
-            (and (string-match "line \\([0-9]+\\)" (second object))
-                 (setq line-error (string-to-number (format "%s" (match-string 1 (second object)))))))
+            (and (string-match "line \\([0-9]+\\)" (cl-second object))
+                 (setq line-error (string-to-number (format "%s" (match-string 1 (cl-second object)))))))
 
           (save-match-data ; is usually a good idea
-            (and (string-match "buffer \\(.+\\)," (second object))
-                 (setq error-buffer (format "%s" (match-string 1 (second object))))))
+            (and (string-match "buffer \\(.+\\)," (cl-second object))
+                 (setq error-buffer (format "%s" (match-string 1 (cl-second object))))))
 
           (message (format "error: %s" buffer-file))
 
@@ -102,17 +102,17 @@ The default buffer name is *sonic-pi-messages*                         . "
           (insert (error-color (replace-regexp-in-string
                                 "&#39" "'"
                                 (replace-regexp-in-string "&gt;" ">"
-                                                          (format "π> Error: %s\n" (second object))))))))
+                                                          (format "π> Error: %s\n" (cl-second object))))))))
 
        ((string-match "\/multi_message*" level)
         ;;TODO: multi_message does not batch messages together,
         ;;so we get them individual without msg-count being incremented.
         ;;Means we duplicate the Run information per message
         (progn
-          (let ((job-id (first object))
-                (thread-name (second object))
-                (run-time (third object))
-                (msg-count (fourth object))
+          (let ((job-id (cl-first object))
+                (thread-name (cl-second object))
+                (run-time (cl-third object))
+                (msg-count (cl-fourth object))
                 (data (nthcdr 4 object)))
             (when (or (> msg-count 1) (string= "" thread-name) )
               (progn
@@ -137,7 +137,7 @@ The default buffer name is *sonic-pi-messages*                         . "
                                (progn (insert (sample-color (format "%s %s\n" format-s msg-data)))))
                              (when (= msg-type 0)
                                (let ((mangled-data (split-string msg-data ",")))
-                                 (insert (text-color (format "%s %s " format-s (first mangled-data))))
+                                 (insert (text-color (format "%s %s " format-s (cl-first mangled-data))))
                                  (insert (sample-color (format "%s" (nth 1 mangled-data))))
                                  (when (> (length mangled-data) 2)
                                    (insert (text-color (format " %s" (nthcdr 2 mangled-data)))))
