@@ -73,7 +73,8 @@ The default buffer name is *sonic-pi-messages*                         . "
                                           ))
 
        ((string-match "\/syntax_error" level)
-        ((message (format "Error: %s" (cl-second object)))
+        (progn
+         (message (format "Error: %s" (cl-second object)))
          (insert (error-color (format "π> Syntax Error: %s\n" (cl-second object))))
          ))
        ((string-match "\/error" level)
