@@ -14,7 +14,7 @@
 (defconst sonic-pi-message-buffer-reduce-denominator 4)
 (defconst sonic-pi-mid-str   "   ├─ ")
 (defconst sonic-pi-end-str   "   └─ ")
-(defconst sonic-pi-start-str "   │ ")
+(defconst sonic-pi-start-str "   ├─ ")
 
 (defconst sonic-pi-ignore-cues 1)
 
@@ -45,6 +45,11 @@ The default buffer name is *sonic-pi-messages*                         . "
           (setq-local comment-end ""))
         buffer)))
 
+
+(defface sonic-pi-error-marker
+   '((t (:foreground "yellow" :weight bold :inherit default)))
+   "Face of error marker")
+
 (defun sonic-pi-log-message (level msg)
   "Log the given MSG to the buffer given by `sonic-pi-message-buffer-name'."
   (interactive)
@@ -61,6 +66,7 @@ The default buffer name is *sonic-pi-messages*                         . "
 
   (defun sonic-pi--pp (level object)
     (cl-flet ((text-color   (str) (propertize str 'face `(:weight normal     :foreground , "white")))
+              (error-marker (str) (propertize str 'face `(:weight ultra-bold :foreground , "red")))
               (error-color  (str) (propertize str 'face `(:weight ultra-bold :background , "red")))
               (thread-color (str) (propertize str 'face `(:weight ultra-bold :foreground , "green")))
               (stdout-color (str) (propertize str 'face `(:weight ultra-bold :foreground , "orange")))
@@ -87,18 +93,22 @@ The default buffer name is *sonic-pi-messages*                         . "
             (and (string-match "buffer \\(.+\\)," (cl-second object))
                  (setq error-buffer (format "%s" (match-string 1 (cl-second object))))))
 
-          (message (format "error: %s" buffer-file))
+          ;;(message (format "error: %s" line-error))
+          (with-current-buffer (get-file-buffer error-buffer)
+            (save-excursion
+              (let ((error-line line-error))
+                (goto-line error-line)
+                (let ((ov (make-overlay (line-beginning-position) (+ 1 (line-beginning-position)))))
 
-          (with-current-buffer (get-file-buffer buffer-file)
-            (let ((error-line line-error))
-              (goto-line error-line)
-              (let ((ov (make-overlay (line-beginning-position) (+ 1 (line-beginning-position)))))
-                (overlay-put ov
-                             'before-string
-                             (propertize " "
-                                         'display
-                                         `((margin left-margin)
-                                           , (concat "\u294F" (overlay-get ov 'linum-str))))))))
+                  (overlay-put ov 'priority 2)
+                  (overlay-put ov
+                               'before-string
+                               (propertize " "
+                                           'display
+                                           `((margin left-margin)
+                                             , (error-marker "\u25B6"))))
+                  (overlay-put ov 'sonic-pi-gutter t)
+                  (overlay-put ov 'evaporate t)))))
 
           (insert (error-color (replace-regexp-in-string
                                 "&#39" "'"
@@ -127,12 +137,12 @@ The default buffer name is *sonic-pi-messages*                         . "
                          for msg-data in (cdr data) by (-partial 'nthcdr 2)
                          for idx from 0 to msg-count
                          do
-                         (let ((format-s (if (and (= idx 1) (> msg-count 2))
-                                             sonic-pi-start-str
-                                           (if (or (= msg-count 2)
-                                                   (= idx (+ 1 (/ msg-count 2))))
-                                               sonic-pi-end-str
-                                             sonic-pi-mid-str))))
+                         (let ((format-s
+                                (if (or
+                                     (and (string= "" thread-name) (= idx (- msg-count 1)))
+                                     (= idx (- msg-count 1)))
+                                    sonic-pi-end-str
+                                  sonic-pi-mid-str)))
                            (progn
                              (when (and (= msg-type 4) (= sonic-pi-ignore-cues 0))
                                (progn (insert (sample-color (format "%s %s\n" format-s msg-data)))))

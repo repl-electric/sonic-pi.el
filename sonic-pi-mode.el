@@ -27,12 +27,17 @@
     map))
 
 ;;;###autoload
-(define-minor-mode sonic-pi-mode
+(define-derived-mode
+  sonic-pi-mode
+  ruby-mode
+  "π"
   "Minor mode for SonicPi interaction from a Ruby buffer."
   :init-value nil
   :global     nil
   :lighter " π"
   :keymap sonic-pi-mode-map)
+
+(add-to-list 'auto-mode-alist '("\\.sp$" . sonic-pi-mode))
 
 (provide 'sonic-pi-mode)
 

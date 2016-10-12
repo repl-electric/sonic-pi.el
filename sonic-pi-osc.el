@@ -68,8 +68,16 @@
 (defun sonic-pi-send-buffer ()
   "send the current buffer to sonic via osc"
   (interactive)
+
+
+  ;;TODO: I don't understand overlays very well. Something other overlay is blocking our overlay
+  ;;When we remove just ours, we never see any new overlays appear :(
+  ;;(remove-overlays (window-start) (window-end) 'sonic-pi-gutter t)
   (dolist (o (overlays-in (window-start) (window-end)))
-    (delete-overlay o))
+    (delete-overlay o)
+    ;;(when (overlay-get o 'sonic-pi-gutter) (delete-overlay o))
+    )
+
   (sonic-pi-osc-send-text (point-min) (point-max))
   (hlt-highlight-regexp-region nil nil ".+" 'eval-sonic-pi-flash nil)
   (run-at-time flash-time nil 'hlt-unhighlight-region))

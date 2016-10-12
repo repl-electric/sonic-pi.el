@@ -56,6 +56,7 @@
 
 (defvar sonic-pi-server-bin             "server/bin/sonic-pi-server.rb")
 (defvar sonic-pi-compile-extensions-bin "server/bin/compile-extensions.rb")
+(defvar sonic-pi-margin-size 1)
 
 (defun sonic-pi-server-cmd () (format "%s%s" sonic-pi-path sonic-pi-server-bin))
 
@@ -91,6 +92,7 @@
            "sonic-pi-server"
            "*sonic-pi-server-messages*"
            cmd)))
+    (set-window-margins (get-buffer-window) sonic-pi-margin-size)
     (sonic-pi-connect)
     (message "Ready!")))
 
