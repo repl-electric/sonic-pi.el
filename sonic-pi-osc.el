@@ -1,21 +1,20 @@
 ;;; sonic-pi-osc.el --- Manage OSC client and server for SonicPi communication -*- lexical-binding: t -*-
 
 (require 'osc)
-(require 'cl)
+(require 'cl-lib)
 (require 'highlight)
 
 (require 'sonic-pi-console)
 
 (defvar flash-time 0.5)
-(defvar f false)
 
 (defface eval-sonic-pi-flash
-  '((((class color)) (:background "#F23444" :foreground "white" :bold f))
+  '((((class color)) (:background "#F23444" :foreground "white" :bold nil))
     (t (:inverse-video t)))
   "Face for highlighting sexps during evaluation."
   :group 'eval-sonic-pi)
 (defface eval-sonic-pi-flash-error
-  '((((class color)) (:foreground "red" :bold f))
+  '((((class color)) (:foreground "red" :bold nil))
     (t (:inverse-video t)))
   "Face for highlighting sexps signaled errors during evaluation."
   :group 'eval-sonic-pi)
@@ -63,8 +62,8 @@
   "send a region to sonic via osc"
   (interactive)
   (sonic-pi-osc-send-text (region-beginning) (region-end))
-  (hlt-highlight-regexp-region (region-beginning) (region-end) ".+" 'eval-sonic-pi-flash f)
-  (run-at-time flash-time nil 'hlt-unhighlight-region nil nil f))
+  (hlt-highlight-regexp-region (region-beginning) (region-end) ".+" 'eval-sonic-pi-flash nil)
+  (run-at-time flash-time nil 'hlt-unhighlight-region nil nil nil))
 
 (defun sonic-pi-send-buffer ()
   "send the current buffer to sonic via osc"
@@ -72,7 +71,7 @@
   (dolist (o (overlays-in (window-start) (window-end)))
     (delete-overlay o))
   (sonic-pi-osc-send-text (point-min) (point-max))
-  (hlt-highlight-regexp-region nil nil ".+" 'eval-sonic-pi-flash f)
+  (hlt-highlight-regexp-region nil nil ".+" 'eval-sonic-pi-flash nil)
   (run-at-time flash-time nil 'hlt-unhighlight-region))
 
 (defun sonic-pi-osc-make-client (host port)
