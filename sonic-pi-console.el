@@ -62,107 +62,107 @@ The default buffer name is *sonic-pi-messages*                         . "
       (goto-char (point-max))
       (sonic-pi--pp level msg)
       (-when-let (win (get-buffer-window))
-        (set-window-point win (point-max)))))
+        (set-window-point win (point-max))))))
 
-  (defun sonic-pi--pp (level object)
-    (cl-flet ((text-color   (str) (propertize str 'face `(:weight normal     :foreground , "white")))
-              (error-marker (str) (propertize str 'face `(:weight ultra-bold :foreground , "red")))
-              (error-color  (str) (propertize str 'face `(:weight ultra-bold :background , "red")))
-              (thread-color (str) (propertize str 'face `(:weight ultra-bold :foreground , "green")))
-              (stdout-color (str) (propertize str 'face `(:weight ultra-bold :foreground , "orange")))
-              (sample-color (str) (propertize str 'face `(:weight ultra-bold :foreground , "blue")))
-              (info-color   (str) (propertize str 'face `(:weight normal     :foreground , "yellow"))))
-      (cond
-       ((string-match "\/info*"  level) (progn
-                                          (insert "π> ")
-                                          (insert (info-color (format "%s\n" (last object))))
-                                          ))
+(defun sonic-pi--pp (level object)
+  (cl-flet ((text-color   (str) (propertize str 'face `(:weight normal     :foreground , "white")))
+            (error-marker (str) (propertize str 'face `(:weight ultra-bold :foreground , "red")))
+            (error-color  (str) (propertize str 'face `(:weight ultra-bold :background , "red")))
+            (thread-color (str) (propertize str 'face `(:weight ultra-bold :foreground , "green")))
+            (stdout-color (str) (propertize str 'face `(:weight ultra-bold :foreground , "orange")))
+            (sample-color (str) (propertize str 'face `(:weight ultra-bold :foreground , "blue")))
+            (info-color   (str) (propertize str 'face `(:weight normal     :foreground , "yellow"))))
+    (cond
+     ((string-match "\/info*"  level) (progn
+                                        (insert "π> ")
+                                        (insert (info-color (format "%s\n" (last object))))
+                                        ))
 
-       ((string-match "\/syntax_error" level)
-        (progn
-         (message (format "Error: %s" (cl-second object)))
-         (insert (error-color (format "π> Syntax Error: %s\n" (cl-second object))))
-         ))
-       ((string-match "\/error" level)
-        (progn
-          (save-match-data ; is usually a good idea
-            (and (string-match "line \\([0-9]+\\)" (cl-second object))
-                 (setq line-error (string-to-number (format "%s" (match-string 1 (cl-second object)))))))
+     ((string-match "\/syntax_error" level)
+      (progn
+       (message (format "Error: %s" (cl-second object)))
+       (insert (error-color (format "π> Syntax Error: %s\n" (cl-second object))))
+       ))
+     ((string-match "\/error" level)
+      (progn
+        (save-match-data ; is usually a good idea
+          (and (string-match "line \\([0-9]+\\)" (cl-second object))
+               (setq line-error (string-to-number (format "%s" (match-string 1 (cl-second object)))))))
 
-          (save-match-data ; is usually a good idea
-            (and (string-match "buffer \\(.+\\)," (cl-second object))
-                 (setq error-buffer (format "%s" (match-string 1 (cl-second object))))))
+        (save-match-data ; is usually a good idea
+          (and (string-match "buffer \\(.+\\)," (cl-second object))
+               (setq error-buffer (format "%s" (match-string 1 (cl-second object))))))
 
-          ;;(message (format "error: %s" line-error))
-          (with-current-buffer (get-file-buffer error-buffer)
-            (save-excursion
-              (let ((error-line line-error))
-                (goto-line error-line)
-                (let ((ov (make-overlay (line-beginning-position) (+ 1 (line-beginning-position)))))
+        ;;(message (format "error: %s" line-error))
+        (with-current-buffer (get-file-buffer error-buffer)
+          (save-excursion
+            (let ((error-line line-error))
+              (goto-line error-line)
+              (let ((ov (make-overlay (line-beginning-position) (+ 1 (line-beginning-position)))))
 
-                  (overlay-put ov 'priority 2)
-                  (overlay-put ov
-                               'before-string
-                               (propertize " "
-                                           'display
-                                           `((margin left-margin)
-                                             , (error-marker "\u25B6"))))
-                  (overlay-put ov 'sonic-pi-gutter t)
-                  (overlay-put ov 'evaporate t)))))
+                (overlay-put ov 'priority 2)
+                (overlay-put ov
+                             'before-string
+                             (propertize " "
+                                         'display
+                                         `((margin left-margin)
+                                           , (error-marker "\u25B6"))))
+                (overlay-put ov 'sonic-pi-gutter t)
+                (overlay-put ov 'evaporate t)))))
 
-          (insert (error-color (replace-regexp-in-string
-                                "&#39" "'"
-                                (replace-regexp-in-string "&gt;" ">"
-                                                          (format "π> Error: %s\n" (cl-second object))))))))
+        (insert (error-color (replace-regexp-in-string
+                              "&#39" "'"
+                              (replace-regexp-in-string "&gt;" ">"
+                                                        (format "π> Error: %s\n" (cl-second object))))))))
 
-       ((string-match "\/multi_message*" level)
-        ;;TODO: multi_message does not batch messages together,
-        ;;so we get them individual without msg-count being incremented.
-        ;;Means we duplicate the Run information per message
-        (progn
-          (let ((job-id (cl-first object))
-                (thread-name (cl-second object))
-                (run-time (cl-third object))
-                (msg-count (cl-fourth object))
-                (data (nthcdr 4 object)))
-            (when (or (> msg-count 1) (string= "" thread-name) )
-              (progn
-                (insert "[")
-                (if (not (string= "" thread-name))
-                    (insert (format "%s" (thread-color thread-name)))
-                  (insert (format "%s" (thread-color "master")))
-                  )
-                (insert "]\n")
-                (cl-loop for msg-type in data by (-partial 'nthcdr 2)
-                         for msg-data in (cdr data) by (-partial 'nthcdr 2)
-                         for idx from 0 to msg-count
-                         do
-                         (let ((format-s
-                                (if (or
-                                     (and (string= "" thread-name) (= idx (- msg-count 1)))
-                                     (= idx (- msg-count 1)))
-                                    sonic-pi-end-str
-                                  sonic-pi-mid-str)))
-                           (progn
-                             (when (and (= msg-type 4) (= sonic-pi-ignore-cues 0))
-                               (progn (insert (sample-color (format "%s%s\n" format-s msg-data)))))
-                             (when (= msg-type 0)
-                               (let ((mangled-data (split-string msg-data ",")))
-                                 (insert (text-color (format "%s%s " format-s (cl-first mangled-data))))
-                                 (insert (sample-color (format "%s" (nth 1 mangled-data))))
-                                 (when (> (length mangled-data) 2)
-                                   (insert (text-color (format " %s" (nthcdr 2 mangled-data)))))
-                                 (insert "\n")))
-                             (when (and (not (= msg-type 4)) (not (= msg-type 0)))
-                               (progn (insert (stdout-color (format "%s%s\n" format-s msg-data))))))
-                           ))))
-            )))
+     ((string-match "\/multi_message*" level)
+      ;;TODO: multi_message does not batch messages together,
+      ;;so we get them individual without msg-count being incremented.
+      ;;Means we duplicate the Run information per message
+      (progn
+        (let ((job-id (cl-first object))
+              (thread-name (cl-second object))
+              (run-time (cl-third object))
+              (msg-count (cl-fourth object))
+              (data (nthcdr 4 object)))
+          (when (or (> msg-count 1) (string= "" thread-name) )
+            (progn
+              (insert "[")
+              (if (not (string= "" thread-name))
+                  (insert (format "%s" (thread-color thread-name)))
+                (insert (format "%s" (thread-color "master")))
+                )
+              (insert "]\n")
+              (cl-loop for msg-type in data by (-partial 'nthcdr 2)
+                       for msg-data in (cdr data) by (-partial 'nthcdr 2)
+                       for idx from 0 to msg-count
+                       do
+                       (let ((format-s
+                              (if (or
+                                   (and (string= "" thread-name) (= idx (- msg-count 1)))
+                                   (= idx (- msg-count 1)))
+                                  sonic-pi-end-str
+                                sonic-pi-mid-str)))
+                         (progn
+                           (when (and (= msg-type 4) (= sonic-pi-ignore-cues 0))
+                             (progn (insert (sample-color (format "%s%s\n" format-s msg-data)))))
+                           (when (= msg-type 0)
+                             (let ((mangled-data (split-string msg-data ",")))
+                               (insert (text-color (format "%s%s " format-s (cl-first mangled-data))))
+                               (insert (sample-color (format "%s" (nth 1 mangled-data))))
+                               (when (> (length mangled-data) 2)
+                                 (insert (text-color (format " %s" (nthcdr 2 mangled-data)))))
+                               (insert "\n")))
+                           (when (and (not (= msg-type 4)) (not (= msg-type 0)))
+                             (progn (insert (stdout-color (format "%s%s\n" format-s msg-data))))))
+                         ))))
+          )))
 
-       ((string-match "/all-jobs-completed" level)
-        (insert "π> ")
-        (insert (info-color "(Live code is now dead code.)\n")))
+     ((string-match "/all-jobs-completed" level)
+      (insert "π> ")
+      (insert (info-color "(Live code is now dead code.)\n")))
 
-       (t (insert (format "π> %s %s\n" level object)))))))
+     (t (insert (format "π> %s %s\n" level object))))))
 
 (provide 'sonic-pi-console)
 
