@@ -12,9 +12,9 @@
 
 (defconst sonic-pi-message-buffer-max-size 1000000)
 (defconst sonic-pi-message-buffer-reduce-denominator 4)
-(defconst sonic-pi-mid-str   "   ├─ ")
-(defconst sonic-pi-end-str   "   └─ ")
-(defconst sonic-pi-start-str "   ├─ ")
+(defconst sonic-pi-mid-str   "   ├─")
+(defconst sonic-pi-end-str   "   └─")
+(defconst sonic-pi-start-str "   ├─")
 
 (defconst sonic-pi-ignore-cues 1)
 
@@ -145,16 +145,16 @@ The default buffer name is *sonic-pi-messages*                         . "
                                   sonic-pi-mid-str)))
                            (progn
                              (when (and (= msg-type 4) (= sonic-pi-ignore-cues 0))
-                               (progn (insert (sample-color (format "%s %s\n" format-s msg-data)))))
+                               (progn (insert (sample-color (format "%s%s\n" format-s msg-data)))))
                              (when (= msg-type 0)
                                (let ((mangled-data (split-string msg-data ",")))
-                                 (insert (text-color (format "%s %s " format-s (cl-first mangled-data))))
+                                 (insert (text-color (format "%s%s " format-s (cl-first mangled-data))))
                                  (insert (sample-color (format "%s" (nth 1 mangled-data))))
                                  (when (> (length mangled-data) 2)
                                    (insert (text-color (format " %s" (nthcdr 2 mangled-data)))))
                                  (insert "\n")))
                              (when (and (not (= msg-type 4)) (not (= msg-type 0)))
-                               (progn (insert (stdout-color (format "%s %s\n" format-s msg-data))))))
+                               (progn (insert (stdout-color (format "%s%s\n" format-s msg-data))))))
                            ))))
             )))
 
