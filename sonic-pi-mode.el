@@ -37,7 +37,7 @@
   :lighter " π"
   :keymap sonic-pi-mode-map)
 
-(add-to-list 'auto-mode-alist '("\\.sp$" . sonic-pi-mode))
+(add-to-list 'auto-mode-alist '("\\.spi$" . sonic-pi-mode))
 
 (provide 'sonic-pi-mode)
 
