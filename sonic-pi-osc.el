@@ -82,6 +82,17 @@
   (hlt-highlight-regexp-region nil nil ".+" 'eval-sonic-pi-flash nil)
   (run-at-time flash-time nil 'hlt-unhighlight-region))
 
+(defun sonic-pi-send-live-loop ()
+  "send a live-loop to sonic via osc"
+  (interactive)
+  (save-excursion
+    (let ((s (re-search-backward "live_loop")))
+      (ruby-end-of-block)
+      (end-of-line)
+      (sonic-pi-osc-send-text s (point))
+      (hlt-highlight-regexp-region s (point) ".+" 'eval-sonic-pi-flash nil))
+    (run-at-time flash-time nil 'hlt-unhighlight-region nil nil nil)))
+
 (defun sonic-pi-osc-make-client (host port)
   (make-network-process
    :name "sonic-pi.el OSC client"
