@@ -80,9 +80,13 @@ The default buffer name is *sonic-pi-messages*                         . "
 
      ((string-match "\/syntax_error" level)
       (progn
-       (message (format "Error: %s" (cl-second object)))
-       (insert (error-color (format "π> Syntax Error: %s\n" (cl-second object))))
-       ))
+        (let ((error-msg
+               (replace-regexp-in-string
+                "&#39" "'"
+                (format "%s" (cl-second object)))))
+          (message (format "Error: %s" error-msg))
+          (insert (error-color
+                   (format "π> Syntax Error: %s\n" error-msg))))))
      ((string-match "\/error" level)
       (progn
         (save-match-data ; is usually a good idea
