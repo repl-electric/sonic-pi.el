@@ -93,7 +93,7 @@
   "send a live-loop to sonic via osc"
   (interactive)
   (save-excursion
-    (let ((s (re-search-backward "live_loop")))
+    (let ((s (re-search-backward "^\\(live_loop\\|with_fx\\)")))
       (ruby-end-of-block)
       (end-of-line)
       (sonic-pi-osc-send-text s (point))
