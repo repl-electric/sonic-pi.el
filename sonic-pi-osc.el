@@ -58,6 +58,13 @@
                                       (buffer-substring-no-properties start end)
                                       (buffer-name)))
 
+(defun sonic-pi-osc-send-file ()
+  (sonic-pi-osc-send-command-with-arg4 "save-and-run-buffer-via-local-file"
+                                       "sonicpi-emacs"
+                                       (buffer-name)
+                                       (buffer-file-name)
+                                       (buffer-name)))
+
 (defun sonic-pi-send-region ()
   "send a region to sonic via osc"
   (interactive)
@@ -78,7 +85,7 @@
     ;;(when (overlay-get o 'sonic-pi-gutter) (delete-overlay o))
     )
 
-  (sonic-pi-osc-send-text (point-min) (point-max))
+  (sonic-pi-osc-send-file)
   (hlt-highlight-regexp-region nil nil ".+" 'eval-sonic-pi-flash nil)
   (run-at-time flash-time nil 'hlt-unhighlight-region))
 
