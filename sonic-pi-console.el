@@ -86,15 +86,40 @@ The default buffer name is *sonic-pi-messages*                         . "
                 (format "%s" (cl-second object)))))
           (message (format "Error: %s" error-msg))
           (insert (error-color
-                   (format "π> Syntax Error: %s\n" error-msg))))))
-     ((string-match "\/error" level)
-      (progn
+                   (format "π> Syntax Error: %s\n" error-msg)))
+
         (save-match-data ; is usually a good idea
-          (and (string-match "line \\([0-9]+\\)" (cl-second object))
+          (and (string-match "line\s+\\([0-9]+\\)" (cl-second object))
                (setq line-error (string-to-number (format "%s" (match-string 1 (cl-second object)))))))
 
         (save-match-data ; is usually a good idea
-          (and (string-match "buffer \\(.+\\)," (cl-second object))
+          (and (string-match "buffer\s+\\(.+\\)," (cl-second object))
+               (setq error-buffer (format "%s" (match-string 1 (cl-second object))))))
+
+        (with-current-buffer (get-file-buffer error-buffer)
+          (save-excursion
+            (let ((error-line line-error))
+              (goto-line error-line)
+              (let ((ov (make-overlay (line-beginning-position) (+ 1 (line-beginning-position)))))
+                (overlay-put ov 'priority 2)
+                (overlay-put ov
+                             'before-string
+                             (propertize " "
+                                         'display
+                                         `((margin left-margin)
+                                           , (error-marker "\u25B6"))))
+                (overlay-put ov 'sonic-pi-gutter t)
+                (overlay-put ov 'evaporate t)))))
+
+          )))
+     ((string-match "\/error" level)
+      (progn
+        (save-match-data ; is usually a good idea
+          (and (string-match "line\s+\\([0-9]+\\)" (cl-second object))
+               (setq line-error (string-to-number (format "%s" (match-string 1 (cl-second object)))))))
+
+        (save-match-data ; is usually a good idea
+          (and (string-match "buffer\s+\\(.+\\)," (cl-second object))
                (setq error-buffer (format "%s" (match-string 1 (cl-second object))))))
 
         ;;(message (format "error: %s" line-error))
