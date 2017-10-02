@@ -73,6 +73,7 @@ The default buffer name is *sonic-pi-messages*                         . "
             (sample-color (str) (propertize str 'face `(:weight ultra-bold :foreground , "blue")))
             (info-color   (str) (propertize str 'face `(:weight normal     :foreground , "yellow"))))
     (cond
+     ((string-match "\/incoming/osc" level))
      ((string-match "\/info*"  level) (progn
                                         (insert "π> ")
                                         (insert (info-color (format "%s\n" (last object))))
