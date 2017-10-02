@@ -96,20 +96,21 @@ The default buffer name is *sonic-pi-messages*                         . "
           (and (string-match "buffer\s+\\(.+\\)," (cl-second object))
                (setq error-buffer (format "%s" (match-string 1 (cl-second object))))))
 
-        (with-current-buffer (get-file-buffer error-buffer)
-          (save-excursion
-            (let ((error-line line-error))
-              (goto-line error-line)
-              (let ((ov (make-overlay (line-beginning-position) (+ 1 (line-beginning-position)))))
-                (overlay-put ov 'priority 2)
-                (overlay-put ov
-                             'before-string
-                             (propertize " "
-                                         'display
-                                         `((margin left-margin)
-                                           , (error-marker "\u25B6"))))
-                (overlay-put ov 'sonic-pi-gutter t)
-                (overlay-put ov 'evaporate t)))))
+        (when (not (string= error-buffer "eval"))
+          (with-current-buffer (get-file-buffer error-buffer)
+            (save-excursion
+              (let ((error-line line-error))
+                (goto-line error-line)
+                (let ((ov (make-overlay (line-beginning-position) (+ 1 (line-beginning-position)))))
+                  (overlay-put ov 'priority 2)
+                  (overlay-put ov
+                               'before-string
+                               (propertize " "
+                                           'display
+                                           `((margin left-margin)
+                                             , (error-marker "\u25B6"))))
+                  (overlay-put ov 'sonic-pi-gutter t)
+                  (overlay-put ov 'evaporate t))))))
 
           )))
      ((string-match "\/error" level)
@@ -122,22 +123,22 @@ The default buffer name is *sonic-pi-messages*                         . "
           (and (string-match "buffer\s+\\(.+\\)," (cl-second object))
                (setq error-buffer (format "%s" (match-string 1 (cl-second object))))))
 
-        ;;(message (format "error: %s" line-error))
-        (with-current-buffer (get-file-buffer error-buffer)
-          (save-excursion
-            (let ((error-line line-error))
-              (goto-line error-line)
-              (let ((ov (make-overlay (line-beginning-position) (+ 1 (line-beginning-position)))))
+        (when (not (string= error-buffer "eval"))
+                  (with-current-buffer (get-file-buffer error-buffer)
+                    (save-excursion
+                      (let ((error-line line-error))
+                        (goto-line error-line)
+                        (let ((ov (make-overlay (line-beginning-position) (+ 1 (line-beginning-position)))))
 
-                (overlay-put ov 'priority 2)
-                (overlay-put ov
-                             'before-string
-                             (propertize " "
-                                         'display
-                                         `((margin left-margin)
-                                           , (error-marker "\u25B6"))))
-                (overlay-put ov 'sonic-pi-gutter t)
-                (overlay-put ov 'evaporate t)))))
+                          (overlay-put ov 'priority 2)
+                          (overlay-put ov
+                                       'before-string
+                                       (propertize " "
+                                                   'display
+                                                   `((margin left-margin)
+                                                     , (error-marker "\u25B6"))))
+                          (overlay-put ov 'sonic-pi-gutter t)
+                          (overlay-put ov 'evaporate t))))))
 
         (insert (error-color (replace-regexp-in-string
                               "&#39" "'"
