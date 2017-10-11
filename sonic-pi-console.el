@@ -97,7 +97,8 @@ The default buffer name is *sonic-pi-messages*                         . "
           (and (string-match "buffer\s+\\(.+\\)," (cl-second object))
                (setq error-buffer (format "%s" (match-string 1 (cl-second object))))))
 
-        (when (not (string= error-buffer "eval"))
+        (when (and (not (string= error-buffer "eval"))
+                   (get-file-buffer error-buffer))
           (with-current-buffer (get-file-buffer error-buffer)
             (save-excursion
               (let ((error-line line-error))
@@ -124,7 +125,9 @@ The default buffer name is *sonic-pi-messages*                         . "
           (and (string-match "buffer\s+\\(.+\\)," (cl-second object))
                (setq error-buffer (format "%s" (match-string 1 (cl-second object))))))
 
-        (when (not (string= error-buffer "eval"))
+        (when (and
+               (not (string= error-buffer "eval"))
+               (get-file-buffer error-buffer))
                   (with-current-buffer (get-file-buffer error-buffer)
                     (save-excursion
                       (let ((error-line line-error))
