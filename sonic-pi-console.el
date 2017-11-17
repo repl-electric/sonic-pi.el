@@ -145,9 +145,11 @@ The default buffer name is *sonic-pi-messages*                         . "
                           (overlay-put ov 'evaporate t))))))
 
         (insert (error-color (replace-regexp-in-string
-                              "&#39" "'"
-                              (replace-regexp-in-string "&gt;" ">"
-                                                        (format "π> Error: %s\n" (cl-second object))))))))
+                              "&quot;" "\""
+                              (replace-regexp-in-string
+                               "&#39" "'"
+                               (replace-regexp-in-string "&gt;" ">"
+                                                         (format "π> Error: %s\n" (cl-second object)))))))))
 
      ((string-match "\/multi_message*" level)
       ;;TODO: multi_message does not batch messages together,
