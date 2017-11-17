@@ -84,9 +84,10 @@
     (delete-overlay o)
     ;;(when (overlay-get o 'sonic-pi-gutter) (delete-overlay o))
     )
-
-  (save-buffer)
-  (sonic-pi-osc-send-file)
+  (sonic-pi-osc-send-text (point-min) (point-max))
+                          ;; NOTE: to fix issue [https://github.com/repl-electric/sonic-pi.el/issues/21] use
+                          ;; (save-buffer)
+                          ;;(sonic-pi-osc-send-file)
   (hlt-highlight-regexp-region nil nil ".+" 'eval-sonic-pi-flash nil)
   (run-at-time flash-time nil 'hlt-unhighlight-region))
 
