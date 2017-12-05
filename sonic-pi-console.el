@@ -64,6 +64,15 @@ The default buffer name is *sonic-pi-messages*                         . "
       (-when-let (win (get-buffer-window))
         (set-window-point win (point-max))))))
 
+(defun unescape (s)
+  (replace-regexp-in-string
+   "&quot;" "\""
+   (replace-regexp-in-string
+    "&gt;" ">"
+    (replace-regexp-in-string
+     "&#39;" "'"
+     s))))
+
 (defun sonic-pi--pp (level object)
   (cl-flet ((text-color   (str) (propertize str 'face `(:weight normal     :foreground , "white")))
             (error-marker (str) (propertize str 'face `(:weight ultra-bold :foreground , "red")))
@@ -81,10 +90,7 @@ The default buffer name is *sonic-pi-messages*                         . "
 
      ((string-match "\/syntax_error" level)
       (progn
-        (let ((error-msg
-               (replace-regexp-in-string
-                "&#39" "'"
-                (format "%s" (cl-second object)))))
+        (let ((error-msg (unescape (format "%s" (cl-second object)))))
           (message (format "Error: %s" error-msg))
           (insert (error-color
                    (format "π> Syntax Error: %s\n" error-msg)))
@@ -143,13 +149,7 @@ The default buffer name is *sonic-pi-messages*                         . "
                                                      , (error-marker "\u25B6"))))
                           (overlay-put ov 'sonic-pi-gutter t)
                           (overlay-put ov 'evaporate t))))))
-
-        (insert (error-color (replace-regexp-in-string
-                              "&quot;" "\""
-                              (replace-regexp-in-string
-                               "&#39" "'"
-                               (replace-regexp-in-string "&gt;" ">"
-                                                         (format "π> Error: %s\n" (cl-second object)))))))))
+        (insert (error-color (unescape (format "π> Error: %s\n" (cl-second object)))))))
 
      ((string-match "\/multi_message*" level)
       ;;TODO: multi_message does not batch messages together,
