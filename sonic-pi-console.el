@@ -66,12 +66,14 @@ The default buffer name is *sonic-pi-messages*                         . "
 
 (defun unescape (s)
   (replace-regexp-in-string
-   "&quot;" "\""
+   "&lt;" "<"
    (replace-regexp-in-string
-    "&gt;" ">"
+    "&quot;" "\""
     (replace-regexp-in-string
-     "&#39;" "'"
-     s))))
+     "&gt;" ">"
+     (replace-regexp-in-string
+      "&#39;" "'"
+      s)))))
 
 (defun sonic-pi--pp (level object)
   (cl-flet ((text-color   (str) (propertize str 'face `(:weight normal     :foreground , "white")))
