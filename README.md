@@ -19,7 +19,7 @@ Prerequisites:
 
 ```shell
 git clone git@github.com:samaaron/sonic-pi.git
-cd sonic-pi && app/server/bin/compile-extensions.rb
+cd sonic-pi && app/server/ruby/bin/compile-extensions.rb
 git clone git@github.com:repl-electric/sonic-pi.el.git ~/.sonic-pi.el
 ```
 
