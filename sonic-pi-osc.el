@@ -72,6 +72,13 @@
   (hlt-highlight-regexp-region (region-beginning) (region-end) ".+" 'eval-sonic-pi-flash nil)
   (run-at-time flash-time nil 'hlt-unhighlight-region nil nil nil))
 
+(defun sonic-pi-send-line ()
+  "send a line to sonic via osc"
+  (interactive)
+  (sonic-pi-osc-send-text (line-beginning-position) (line-end-position))
+  (hlt-highlight-regexp-region (line-beginning-position) (line-end-position) ".+" 'eval-sonic-pi-flash nil)
+  (run-at-time flash-time nil 'hlt-unhighlight-region nil nil nil))
+
 (defun sonic-pi-send-buffer ()
   "send the current buffer to sonic via osc"
   (interactive)
@@ -95,7 +102,7 @@
   "send a live-loop to sonic via osc"
   (interactive)
   (save-excursion
-    (let ((s (re-search-backward "^\\(live_loop\\|with_fx\\)")))
+    (let ((s (re-search-backward "^\\(live_loop\\|with_fx\\|in_thread\\|define\\)")))
       (ruby-end-of-block)
       (end-of-line)
       (sonic-pi-osc-send-text s (point))
