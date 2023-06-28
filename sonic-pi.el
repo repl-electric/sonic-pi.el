@@ -54,7 +54,7 @@
   :type 'string
   :group 'sonic-pi)
 
-(defvar sonic-pi-server-bin             "app/server/ruby/bin/sonic-pi-server.rb")
+(defvar sonic-pi-server-bin             "app/server/ruby/bin/spider-server.rb")
 (defvar sonic-pi-compile-extensions-bin "server/bin/compile-extensions.rb")
 (defvar sonic-pi-margin-size 1)
 
@@ -71,7 +71,7 @@
 (defun sonic-pi-valid-setup-p ()
   (cond
    ((not sonic-pi-path) (progn (message "No sonic-pi-path set! Did you forget (setq sonic-pi-path \"YOUR_INSTALL_OF_SONIC_PI\")")) nil)
-   ((not (sonic-pi--sonic-pi-server-present-p)) (progn (message (format "Could not find a sonic-pi server in: %s" sonic-pi-path)) nil))
+   ((not (sonic-pi--sonic-pi-server-present-p)) (progn (message (format "Could not find a sonic-pi server in: %s/%s" sonic-pi-path sonic-pi-server-bin)) nil))
    ((not (sonic-pi--ruby-present-p)) (progn (message "Could not find a ruby (1.9.3+) executable to run SonicPi") nil))
    ((and sonic-pi-path (sonic-pi--sonic-pi-server-present-p) (sonic-pi--ruby-present-p)) t)
    (t nil)))
