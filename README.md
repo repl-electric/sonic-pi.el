@@ -1,3 +1,28 @@
+This is a fork of sonic-pi that got tested under Arch Linux.
+This fork fixes server-path.
+My path is:
+``` text
+sonic-pi /usr/lib/sonic-pi/server/bin/sonic-pi-server.rb
+```
+you can check yours with:
+
+``` shell
+pacman -Ql sonic-pi | rg bin
+```
+And if necessary modify this line to use the correct path:
+
+``` text
+(defvar sonic-pi-server-bin             "server/ruby/bin/sonic-pi-server.rb")
+```
+and add this to you config.el:
+``` emacs-lisp
+(add-hook 'sonic-pi-mode-hook
+          (lambda ()
+            ;; This setq can go here instead if you wish
+            (setq sonic-pi-path " /usr/lib/sonic-pi/")
+            (define-key ruby-mode-map "\C-c\C-b" 'sonic-pi-stop-all)))
+```
+
 # Sonic Pi for Emacs π=-
 
 A Emacs plugin to enable live coding music in Ruby communicating with SonicPi.
