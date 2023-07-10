@@ -54,7 +54,7 @@
   :type 'string
   :group 'sonic-pi)
 
-(defvar sonic-pi-server-bin             "server/ruby/bin/sonic-pi-server.rb")
+(defvar sonic-pi-server-bin             "server/bin/sonic-pi-server.rb")
 (defvar sonic-pi-compile-extensions-bin "server/bin/compile-extensions.rb")
 (defvar sonic-pi-margin-size 1)
 
